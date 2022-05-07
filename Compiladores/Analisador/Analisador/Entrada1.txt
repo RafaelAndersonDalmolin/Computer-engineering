@@ -1,0 +1,15 @@
+programa test ;
+    var v , i , max , juro : inteiro ;
+    inicio
+        enquanto v <> 0 faca
+        inicio
+        	leia ( v ) ; { leia o valor inicial}
+       	 	leia ( juro ) ; { leia a taxa de juros }
+       	 	leia ( max ) ; { Leia o periodo }
+        	valor := 1 ;
+        	enquanto i <= Max faca
+        	inicio
+        		valor := valor * ( 1 + juro ) ;
+        	fim
+    	fim
+ 	fim .

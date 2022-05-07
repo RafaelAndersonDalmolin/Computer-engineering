@@ -1,0 +1,40 @@
+Nome: Rafael Anderson dalmolin 
+
+
+Instruções
+	Analisador lexico, le um arquivo como entrada e faz a analise lexica dando como saindo uma lista de tokens e/ou erro ocorrido
+	e sua linha.
+
+	Partindo de uma entrada e passando pelo analisador lexico, o analisador sintatico recebe a lista de tokens que passou pelo lexico
+	e assim tentar fazer o reconhecimento da palavra, retornando uma lista final em caso de sucesso que sera analisada semanticamento.
+	ou retornando erro em caso de insucesso.
+
+	Foi necessario implementar um buffer para guardar temporariamente as palavras. usando biblioteca buffer.h
+	
+	Foi necessario implementar um classificador para reconhecer os lexemas e reportar erros de reconhecimento. usando biblioteca classify.h
+	
+	Foi necessario implementar uma lista duplamente encadeada para guardas os tokens e linha de um lexema. utilizando a biblioteca 
+	doubly_linked.h
+
+	Para compilar o programa: abrir o terminal dentro da pasta e colar o seguinte texto.
+	
+	***** gcc Analisador.c buffer.c buffer.h doubly_linked.c doubly_linked.h classify.c classify.h lexico.c lexico.h sintatico.c sintatico.h -o Analisador
+
+	Para executar o analisador lexico, deve se abrir o terminal dentro da pasta onde o mesmo foi compilado e colar o seguinte texto 
+	alterando "Entrada.txt" para o nome do seu arquivo a ser classificado.
+ 	
+	***** ./Analisador Entrada.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+

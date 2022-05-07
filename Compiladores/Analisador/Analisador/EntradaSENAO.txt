@@ -1,0 +1,6 @@
+programa test ;
+    var v : inteiro ;
+inicio
+        se x > 2 entao
+            leia ( v ) 
+ fim .

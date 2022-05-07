@@ -1,0 +1,97 @@
+programa test ;
+    var v , i , max , juro : inteiro ;
+    inicio
+        enquanto v <> 0 faca
+        inicio
+        	leia ( v ) ; { leia o valor inicial}
+       	 	leia ( juro ) ; { leia a taxa de juros }
+       	 	leia ( max ) ; { Leia o periodo }
+        	valor := 1 ;
+        	enquanto i <= Max faca
+        	inicio
+        		valor := valor * ( 1 + juro ) ;
+        	fim
+        escreva ( valor ) ; {EU TO ACHANDO QUE A GRAMÁTICA NÃO ACEITA ISSO AQUI}
+    	fim
+ 	fim .
+
+programa id ; B .
+programa id ; C B' .
+programa id ; var D ; C' B' .
+programa id ; var id D' : E ; C' B' .
+programa id ; var id , id D' : E ; C' B' .
+programa id ; var id, id , id D' : E ; C' B' .
+programa id ; var id , id , id : E ; C' B' .
+programa id ; var id , id , id : inteiro ; C' B' .
+programa id ; var id , id , id : inteiro ; B' . 
+programa id ; var id , id , id : inteiro ; I .
+programa id ; var id , id , id : inteiro ; inicio J I' . 
+programa id ; var id , id , id : inteiro ; inicio enquanto R faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto T R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto U T' R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto V U' T' R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID U' T' R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID T' R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID R' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID S T faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> T faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> U T' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> V U' T' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num U' T' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num T' faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca J I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; I'' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; I'' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; I'' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; I'' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID J' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := R I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := T R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := U T' R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := V U' T' R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num U' T' R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num T' R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num R' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; I'' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto R faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto T R' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto U T' R' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto V U' T' R' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID U' T' R' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID R' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID S T faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= T faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= U T' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= V U' T' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num U' T' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num T' faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca J I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID J' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID := R I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID := T R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  U T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  V U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * V U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( R ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( T R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( U T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( V U' T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num U' T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + U T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + V U' T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + ID U' T' R' ) U' T' R' I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + ID ) I' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + ID ); I'' I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + ID ); fim I' I' .
+programa id ; var id , id , id : inteiro ; inicio enquanto ID <> num faca inicio leia ( ID ) ; leia ( ID ) ; leia ( ID ) ; ID := num ; enquanto ID <= num faca inicio ID :=  ID * ( num + ID ); fim fim fim .

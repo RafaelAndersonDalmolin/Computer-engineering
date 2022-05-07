@@ -1,0 +1,9 @@
+programa test ;
+    var v , x : inteiro ;
+inicio
+		x := - 1 + 4 ;
+        se x > 2 entao
+            leia ( v ) 
+	    senao
+	        escreva ( v ) ;
+ fim .
