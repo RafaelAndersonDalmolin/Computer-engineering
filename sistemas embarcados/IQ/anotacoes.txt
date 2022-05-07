@@ -1,0 +1,80 @@
+### Conversor CC-CC - Buck-boost
+
+#### Enunciado
+Estou colocando o circuito de dois conversores CC-CC no PSIM, um buck-boost e um flyback. 
+Ambos são um circuito completos para alimentar uma lâmpada LED. A malha precisa ser fechada, 
+considerando um sensor de corrente que entrega 185mV / 1A. 
+O controle deve ser implementado em 60kHz, 
+tentando entregar a corrente constante de 0,6A para o conjunto de LEDs. 
+É importante destacar que esse circuito prevê oscilação da tensão e, portanto, 
+vocês dever ter como resultado a média da corrente próxima de 0.6A.
+
+#### Resolução
+##### 1. Escolha do Microcontrolador
+Para este projeto foi escolhido o microcontrolador tiva com as seguintes caracterítiscas:
+
+Tiva:
+Fclk = 120 MHz
+ADC --> 12 bits, operando de 0 a 3,3V
+
+
+
+##### 2. Representaçao digital de 0.185V
+
+3.3	 ->	4095
+0.185    ->	x
+
+x = 229.568 -> 229
+
+#### 3. Calculo do fator de correção (FC) para 1A
+
+O fator de conversao utilizado será o de 2^11 pois apresentou um erro pequeno.
+Q11
+FC = (1 * 2^11) /229  = 8.943 = 9
+Erro = 1 - ((9 * 229) / 2^11) = 0.00634 
+
+##### 4. malha fechada
+
+
+Com objetivo de ajustar os valores dos ganhos proporcional e integrador, 
+é necessário ajustar a base para que fique de acordo com o microcontrolador, 
+é esperado que os valores não ultrapassem 32 bits e obtenham um erro que seja não comprometa o projeto de forma significativa, 
+sendo assim, foi escolhido a base 11 para ajuste de base dos ganhos Kp e Ki:
+
+A equação do PI para o buck-boost é:
+Dn = Dn-1 + En*0.1557 - En-1*0.122
+
+0.1557 * 2^11 = 318.8736 = 318
+erro = 0.1557 - (318 / 2^11) = 0.000426562
+
+0.122 * 2^11 = 249.856 = 250
+erro = 0.122 - (250 / 2^11) = 0.00007
+
+É possível observar que a base Q11 é adequada para conversão dos valores dos ganhos, pois apresenta um erro praticamente insignificante.
+
+Dn = Dn-1 + En*0.1557 - En-1*0.122
+Dn(Q11) = Dn-1 + En(Q11)*318(Q11) - 250(Q11)*En(Q11)-1 
+
+#### 6. Ajustando PWM
+
+
+A resolução do PWM depende da frequência de operação, 
+como foi definido que o controle deverá operar em 120MHz 
+basta dividir a frequência do microcontrolador por 60kHz.
+
+PWM = 120Mhz/60kHz = 2000
+
+Vale lembrar que o valor do PWM não está em base nenhuma 
+e ele representa que quando o PWM estiver em 2000 o
+duty cycle estará em 100%, porém, para que o valor do PWM 
+e Duty Clycle estejam de acordo com as bases do controlador
+
+PWM(Q12) -> 100% --> 1 * 2^12 = 4096
+assim:
+Dn = (Dn * 2000)/4096
+
+Para representar a divisão será utilizado *shift*
+
+Dn(Q12) = Dn-1 + ((En(Q11)*318(Q11)) >> 10) - ((250(Q11)*En(Q11)-1) >> 10) 
+
+Dn = ((Dn * 2000) >> 12)

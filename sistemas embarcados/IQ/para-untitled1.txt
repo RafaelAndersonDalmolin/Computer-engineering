@@ -1,0 +1,22 @@
+Vin = 127
+Nled = 37
+Vj = 2.747
+Rled = 0.725
+
+L1pfc = 3.84m
+L2pfc = 180.95u
+C1pfc = 150n
+C2pfc = 67u
+fspfc = 60000
+Dpfc = 0.288
+
+Lpc = 97.7u
+Cpc = 12.81u
+Dpc = 0.16
+fs_pc = 60000
+
+Dfly = 0.4
+Lm = 544.402u
+Cfly = 22u
+N1 = 57
+N2 = 18
