@@ -1,0 +1,51 @@
+Exericico 1
+1)	DDL - Definicao de dados da liguagem: Usado para definir a estrutura ou um esquema do banco de dados
+	DML - Manipulaçao de dados da linguagem: Usado para gerenciar e manipular os dados do banco de dados
+	DCL - Controle de dados da linguagem
+
+2)	O unico comando que pode ser efetivamente otimizado é o comando de selecao. Todos os outros comandos 
+do DML vao ser otimizados fazendo a otimização da sua seleção anteriormente.
+
+3) 	CREATE TABLE é transformado em uma sequência de inserts nas tabelas do dicionário de dados do banco.
+Por exemplo uma nova tupla na tabela de tabelas, na tabela de índices, na tabela de atributos, etc...
+	COMMIT TRANSACTION leva a transação a um estado de confirmação, podendo ser abortada em caso de concorrência ou 
+confirmado caso esteja tudo bem. Ela libera recursos de travamentos de tuplas (bloqueios).
+	ANALYZE table coleta estatísticas da tabela alvo montando inclusive um histograma de valores para cada atributo 
+indexado ou chave, permitindo avaliarmos a seletividade destes campos ao escolher o melhor plano de acesso e melhor
+índice para uma consulta.
+
+4)	
+
+5)	INTERPRETADOR DE CONSULTA 
+		Analisa as variaveis que o usuario criou e o conjunto lexico
+		gera a expressão de comandos logicos
+	GERADOR DO PLANO DE CONSULTA
+		Otimiza a expressao logica
+		gera varios planos de consulta (regras algebricas)
+		Avalia os custos dos planos de consulta montados (acesso a disco, uso da memoria, uso do processador)	
+	GERADOR DO PLANO DE ACESSO-
+		controle de concorrencia: Dar lock em tal atributo que está sendo lido atualizado ou apagado para que 
+ele nao seja alterado de forma errada e perca seu valor (semaforos?)
+		otimizador de recursos: 
+	EXECUTOR-
+
+8)	Travar um local importante no banco com comandos DDL
+
+
+Exercicio 4 (seletividade = 1-(numero de tuplas no resultado/ numero de tuplas na entrada)
+1)	O plano 1 é o canonico pois as operações estao na sequencia em que foram escritas 
+
+
+
+ Exercicio 5
+COMANDOS SQL
+
+2.a 	Select Nome, Idade from Contato
+where Idade > 14 and Idade < 19;
+
+2.b	Select cid, Nome, Idade, Telefone from Contato, endereco
+where  cid = id and Idade > 20 and upper(Cidade) = 'PATO BRANCO';
+
+2.c	Select cid, Nome, Idade from Contato, endereco
+where indicadopor = id and Nome = 'Jose da Silva';
+

@@ -1,0 +1,15 @@
+Indices para todas as chaves estrangeiras, serao criado mais indices que beneficiarao as buscas mais corriqueiras, assim como as propias buscas 
+das funçoes.
+
+create index fk_endereco_cep on endereco using btree (cep);
+create index fk_pessoa_num_rua on pessoa using btree (num, rua, cep);
+create index fk_funcionario_cpf on funcionario using btree (cpf);
+create index fk_unidade_saude_num_rua on unidade_saude using btree (num, rua);
+create index fk_risco_id_vac on risco using btree (id_vac);
+create index fk_risco_cep on risco using btree (cep);
+create index fk_estoque_cnpj on estoque using btree (cnpj);
+create index fk_estoque_id_vac on estoque using btree (id_vac);
+create index fk_vacinou_se_id_func on vacinou_se using btree (cpf_func);
+create index fk_vacinou_se_cpf on vacinou_se using btree (cpf);
+create index fk_vacinou_se_cnpj on vacinou_se using btree (cnpj);
+create index fk_vacinou_se__id_vac on vacinou_se using btree (id_vac);

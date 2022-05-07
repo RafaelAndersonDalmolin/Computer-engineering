@@ -1,0 +1,163 @@
+
+--------------------Criando uma funçao para uma trigger que calcula a idade dado a data de nascimento------------------
+CREATE OR REPLACE FUNCTION atualizaidade() returns trigger as 
+$$ 
+	begin
+  		new.idade = extract(year from age(NEW.datanasc))::integer;
+   		return new;
+	end; 
+$$
+language plpgsql
+
+CREATE TRIGGER calcula_idade before insert on aluno for each row execute procedure atualizaidade();
+
+--------------------------------------Numero aleatorio (Quantidade max de digitos por parametro)--------------------------
+
+
+create or replace function numero(digitos integer) returns integer as
+$$
+	begin
+	return trunc(random()*power(10,digitos));
+	end;
+$$language plpgsql;
+
+--select numero(3);
+
+---------------------------------------Data aleatoria (indicar periodo na funcao se quiser alterar)-----------------------	
+
+create or replace function data() returns date as
+$$
+	begin
+		return date(timestamp '1980-01-01 00:00:00' +
+		random() * (timestamp '2017-01-30 00:00:00' -
+		timestamp '1990-01-01 00:00:00'));
+	end;
+$$language plpgsql;
+
+--select data();
+
+-----------------------------------------------Texto aleatorio------------------------------------------------------------
+
+Create or replace function texto(tamanho integer) returns text as
+$$
+declare
+  chars text[] := '{0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
+  result text := '';
+  i integer := 0;
+begin
+  if tamanho < 0 then
+    raise exception 'Tamanho dado nao pode ser menor que zero';
+  end if;
+  for i in 1..tamanho loop
+    result := result || chars[1+random()*(array_length(chars, 1)-1)];
+  end loop;
+  return result;
+end;
+$$ language plpgsql;
+
+--select texto(5);
+
+------------------------------------------------TABELAS-------------------------------------------------------------------------
+
+CREATE TABLE Aluno(
+	Nome VARCHAR NOT NULL,
+	RA DECIMAL(8) ,
+	DataNasc DATE NOT NULL,
+	Idade integer,
+	NomeMae VARCHAR NOT NULL,
+	Cidade VARCHAR,
+	Estado CHAR(2),
+	Curso VARCHAR,
+	periodo integer
+);
+CREATE TABLE Discip(
+	Sigla CHAR(7) NOT NULL,
+	Nome VARCHAR NOT NULL,
+	SiglaPreReq VARCHAR,
+	NNCred DECIMAL(2) NOT NULL,
+	Monitor DECIMAL(8) UNIQUE,
+	Depto varCHAR
+);
+	
+CREATE TABLE Matricula(
+	RA DECIMAL(8),
+	Sigla VARCHAR,
+	Ano integer,
+	Semestre integer ,
+	CodTurma integer NOT NULL,
+	NotaP1 NUMERIC(3,1), 
+	NotaP2 NUMERIC(3,1),
+	NotaTrab NUMERIC(3,1),
+	NotaFIM NUMERIC(3,1),
+	Frequencia decimal(3)
+);
+
+-------------------------------------------------------------------------------------------------------------------------E
+Exercicio 1 
+
+ALTER TABLE Aluno ADD CONSTRAINT PK_RA PRIMARY KEY (RA);
+ALTER TABLE Discip ADD CONSTRAINT PK_Sigla PRIMARY KEY (Sigla);
+ALTER TABLE Matricula ADD CONSTRAINT PK_RA_Sig_Ano_Sem PRIMARY KEY (RA,Sigla,ano,semestre);
+ALTER TABLE Discip ADD CONSTRAINT FK_Sigla_Pre_Req FOREIGN KEY (SiglaPreReq) REFERENCES Discip(Sigla)  ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE Discip ADD CONSTRAINT FK_Monitor FOREIGN KEY (Monitor) references aluno(RA)  ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE Matricula ADD CONSTRAINT FK_RA FOREIGN KEY (RA) REFERENCES Aluno(RA) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Matricula ADD CONSTRAINT FK_Sigla FOREIGN KEY (Sigla) references Discip(Sigla) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-------------------------FUNÇOES DE INSERÇAO  ----------------------------------------------------------------------------
+do $$
+	begin
+		for i in 1..1000000 loop
+			insert into Aluno(Nome,RA,DataNasc,NomeMae,Cidade,Estado,Curso,Periodo)
+			values(texto(10),numero(8),data(),texto(10),texto(10),texto(2),texto(10),(numero(1)+1));
+		end loop;
+	end
+$$ language plpgsql
+
+do $$
+	begin
+		for i in 1..1000000 loop
+			insert into carro(ano, modelo,idCliente)values((random()*100)::integer, texto(6), i);
+		end loop;
+	end
+$$ language plpgsql
+
+-------------------------------------------------------------------------------------------------------------------------
+Exercicio 2
+
+CREATE UNIQUE INDEX IdxAlunoNNI ON Aluno (Nome, NomeMae, Idade);
+
+explain select * from aluno where nome = '%Pedro%' and nomemae = '%Maria%' and idade = 22;
+
+explain select * from aluno where idade > 0;
+
+-------------------------------------------------------------------------------------------------------------------------
+Exercicio 3
+
+a)
+explain select * from aluno
+
+b)
+alter table aluno add column genero varchar;
+
+update aluno set genero = 'm' where idade < 30 
+update aluno set genero = 'f' where idade > 30
+explain analyse select * from alunos where genero=='m';
+
+c)
+create index idxgen on aluno using gin(genero);
+explain analyse select nome, idade from aluno where genero = 'm';
+
+d)
+create index idade on aluno using btree(ra) where idade>18;
+explain analyse select ra from aluno where idade>18
+
+
+-------------------------------------------------------------------------------------------------------------------------
+Exercicio 4
+create index FK_Monitor on Discip using btree(monitor);
+explain analyse select A.nome from aluno A, Discip D where A.Ra=D.monitor and A.idade>18;
+
+-------------------------------------------------------------------------------------------------------------------------
+Exercicio 5
+
+explain analyse select A.nome from aluno where genero=='f' and periodo >7;

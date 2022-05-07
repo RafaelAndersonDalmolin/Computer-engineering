@@ -1,0 +1,16 @@
+cria uma view com o nome, cpf de uma pessoa e seu endereço
+
+create view Endereço_pessoa as select P.cpf as CPF, P.nome As nome, E.rua as Rua, E.num as Numero, E.bairro as Bairro
+from Pessoa as P inner join Endereco as E on (P.num =E.num and P.rua=E.rua and P.cep=E.cep )
+ ----------------------------------------------------------------------------
+cria uma view com a unidade de saude, o nome das vacinas na unidade e a 
+quantidade em estoque
+
+create view quantidade_vacina_unidade as 
+select U.cnpj,V.nome,E.quantidade from unidade_saude as U inner join estoque as E on (U.cnpj = E.cnpj) inner join vacina as V 
+on (E.id_vac = V.id_vac);
+
+----------------------------------------------------------------------------
+
+create view dados_func as 
+select P.nome,F.data_reg,F.salario from funcionario as F inner join pessoa P on (F.cpf=P.cpf);

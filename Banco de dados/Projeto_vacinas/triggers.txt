@@ -1,0 +1,72 @@
+﻿cada nova vacina aplicada, descontar uma no estoque
+auditoria tabela estoque
+raise notice quanto quantidade < 10 
+
+
+==================== RAISE EXCEPTION ============
+
+
+CREATE OR REPLACE FUNCTION quantidade_estoque()
+RETURN trigger AS $$
+BEGIN
+	if(NEW.quantidade < 10) 
+	RAISE NOTICE 'Quantidade em estoque menor que 10 unidades';
+	end if;
+end;
+return
+$$ language 'plpgsql;
+	 
+
+CREATE TRIGGER qtd_estoque AFTER UPDATE ON estoque
+FOR EACH ROW EXECUTE PROCEDURE quantidade_estoque()
+
+
+================== tabela auditoria =================
+
+
+CREATE OR REPLACE FUNCTION process_estoque_audit()
+RETURNS TRIGGER AS $$
+	BEGIN
+		IF (TG_OP = 'DELETE') THEN
+			INSERT INTO audit_estoque SELECT 'D', now(), user, OLD.*;
+		RETURN OLD;
+		ELSIF (TG_OP = 'UPDATE') THEN
+			INSERT INTO audit_estoque SELECT 'U', now(), user, NEW.*;
+		RETURN NEW;
+		ELSIF (TG_OP = 'INSERT') THEN
+			INSERT INTO audit_estoque SELECT 'I', now(), user, NEW.*;
+		RETURN NEW;
+		END IF;
+		RETURN NULL;
+	END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER estoque_audit AFTER INSERT OR UPDATE OR DELETE ON estoque
+FOR EACH ROW EXECUTE PROCEDURE process_estoque_audit();
+
+
+create table audit_estoque (
+	operacao char, 
+	data timestamp,
+	usuario varchar,
+	cnpj VARCHAR,
+	id_vac INTEGER,
+	quantidade SMALLINT
+);
+
+=========== cada nova vacina aplicada, descontar uma no estoque ======
+
+
+
+CREATE OR REPLACE FUNCTION update_estoque()
+RETURNS trigger AS $$
+	BEGIN
+		UPDATE estoque set quantidade = quantidade+1 where cnpj=new.cnpj and new.id_vac=id_vac;
+		return new;
+	end;
+$$ language plpgsql;
+	 
+
+CREATE TRIGGER update_estoque AFTER INSERT ON vacinou_se
+FOR EACH ROW EXECUTE PROCEDURE update_estoque();
+

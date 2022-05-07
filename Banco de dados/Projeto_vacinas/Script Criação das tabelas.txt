@@ -1,0 +1,121 @@
+CREATE TABLE public.municipios (
+    cep character varying,
+    municipioestado character varying,
+    bairro character varying,
+    logradouro character varying,
+    edificio character varying
+);
+
+inserir txt do cep01...cep07
+
+create table cep as  
+select cep, substring(municipioestado from 0 for position('/' in municipioestado)) as municipio,
+substring(municipioestado from '..$' ) as estado
+from municipios;
+ 
+ALTER TABLE cep ADD CONSTRAINT pk_cep_cep PRIMARY KEY (cep);
+
+UPDATE cep SET cep = '0' || cep where CHAR_LENGTH(cep)=7;
+
+-----------------------------------------------------------------------
+create table nomes (
+	nome_f VARCHAR(50),
+	nome_m VARCHAR(50),
+	sobrenome VARCHAR(50)
+);
+
+inserir txt nomes...
+
+----------------------------------------------------------------------
+CREATE TABLE endereco (
+	rua	VARCHAR,
+	num 	SMALLINT,
+	bairro	VARCHAR,
+	complemento VARCHAR,
+	cep VARCHAR,
+	CONSTRAINT pk_endereco_num_rua PRIMARY KEY (cep,rua,num),
+	CONSTRAINT fk_endereco_cep FOREIGN KEY (cep) REFERENCES cep(cep) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE pessoa(
+	cpf	VARCHAR,
+	rg	INTEGER,
+	data_nasc	DATE NOT NULL,
+	sexo	CHAR(1) NOT NULL,
+	nome		VARCHAR,
+	nome_pai	VARCHAR,
+	nome_mae	VARCHAR,
+	tipo_sang	VARCHAR,
+	est_civil	VARCHAR,
+	cor		VARCHAR,
+	nacionalidade 	VARCHAR,
+	funcionario BOOLEAN NOT NULL default false,
+	fone1 VARCHAR NOT NULL,
+	fone2 VARCHAR,
+	num SMALLINT,
+	rua	VARCHAR,
+	cep	VARCHAR,
+	CONSTRAINT pk_pessoa_cpf PRIMARY KEY (cpf),
+	CONSTRAINT fk_pessoa_num_rua FOREIGN KEY (num,rua,cep) REFERENCES endereco (num,rua,cep) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE funcionario (
+	cpf VARCHAR,
+	data_reg	DATE,
+	data_saida	DATE,
+	Salario	NUMERIC(7,2),
+	CONSTRAINT pk_funcionario_cpf PRIMARY KEY (cpf),
+	CONSTRAINT fk_funcionario_cpf FOREIGN KEY (cpf) REFERENCES pessoa(cpf) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE vacina (
+	id_vac SERIAL,
+	nome VARCHAR,
+	tipo VARCHAR,
+	CONSTRAINT pk_vacina_id_vac PRIMARY KEY (id_vac) 
+);
+
+CREATE TABLE unidade_saude (
+	cnpj VARCHAR,
+	horario_atendimento VARCHAR,
+	num SMALLINT NOT NULL,
+	rua VARCHAR NOT NULL,
+	cep VARCHAR NOT NULL,
+	fone1 VARCHAR NOT NULL,
+	fone2 VARCHAR,
+	CONSTRAINT pk_unidade_saude_cnpj PRIMARY KEY (cnpj),
+	CONSTRAINT fk_unidade_saude_num_rua FOREIGN KEY (num,rua,cep) REFERENCES endereco (num,rua,cep) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE risco (
+	cep VARCHAR,
+	id_vac	INTEGER,
+	aplicacao VARCHAR NOT NULL,
+	reforco	VARCHAR NOT NULL,
+	CONSTRAINT pk_risco_cep_id_vac PRIMARY KEY (cep,id_vac),
+	CONSTRAINT fk_risco_id_vac FOREIGN KEY (id_vac) REFERENCES vacina (id_vac) ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_risco_cep FOREIGN KEY (cep) REFERENCES cep (cep) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE estoque (
+	cnpj VARCHAR,
+	id_vac INTEGER,
+	quantidade SMALLINT NOT NULL,
+	CONSTRAINT pk_estoque_cnpj_id_vac PRIMARY KEY (cnpj,id_vac),
+	CONSTRAINT fk_estoque_cnpj FOREIGN KEY (cnpj) REFERENCES unidade_saude (cnpj) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT fk_estoque_id_vac FOREIGN KEY (id_vac) REFERENCES vacina (id_vac) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE vacinou_se (
+	cpf_func VARCHAR,
+	cpf VARCHAR,
+	cnpj VARCHAR,
+	id_vac INTEGER,
+	data_hora TIMESTAMP,
+	CONSTRAINT pk_vacinou_se PRIMARY KEY (cpf,cnpj,cpf_func,id_vac,data_hora),
+	CONSTRAINT fk_vacinou_se_id_func FOREIGN KEY (cpf_func) REFERENCES funcionario (cpf) ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_vacinou_se_cpf FOREIGN KEY (cpf) REFERENCES pessoa (cpf) ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_vacinou_se_cnpj FOREIGN KEY (cnpj) REFERENCES unidade_saude (cnpj) ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT fk_vacinou_se_id_vac FOREIGN KEY (id_vac) REFERENCES vacina (id_vac) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+

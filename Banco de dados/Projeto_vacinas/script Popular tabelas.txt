@@ -1,0 +1,201 @@
+-- retorna uma busca cep,rua e numero de um endereco da tabela endereco
+create function cep_rua_num()
+RETURNS table (cep VARCHAR,rua VARCHAR,numero SMALLINT) AS $$
+	begin
+		return query select E.cep,E.rua,E.num FROM endereco as E ORDER BY random() LIMIT 1;
+	end;
+$$ language plpgsql;
+
+
+---------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION CEP_RANDOM ()
+RETURNS VARCHAR AS $$
+DECLARE
+	BEGIN
+		RETURN cep FROM cep ORDER BY random() LIMIT 1;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+-----------------------------------------------------------
+create or replace function numero(digitos integer) returns integer as
+$$
+   begin
+      return trunc(random()*power(10,digitos));
+   end;
+$$language plpgsql;
+
+-----------------------------------------------------------
+create or replace function data() returns date as
+$$
+   begin
+   return date(timestamp '1980-01-01 00:00:00' +
+       random() * (timestamp '2017-01-30 00:00:00' -
+                   timestamp '1990-01-01 00:00:00'));
+   end;
+$$language plpgsql;
+-----------------------------------------------------------
+CREATE OR REPLACE FUNCTION gerar_CPF() RETURNS varchar AS $$
+-- ROTINA DE GERAÇÃO DE CPF SEM LOOP
+-- Retorna string com CPF aletório correto.
+	DECLARE
+	vet_cpf integer [11]; --Recebe o CPF
+	soma integer; -- Soma utilizada para o cálculo do DV
+	rest integer; -- Resto da divisão
+	BEGIN
+		-- Atribuição dos valores do Vetor
+		vet_cpf[0] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[1] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[2] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[3] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[4] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[5] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[6] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[7] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+		vet_cpf[8] := cast(substring (CAST (random() AS VARCHAR), 3,1) as integer);
+
+		-- CÁLCULO DO PRIMEIRO NÚMERO DO DV
+		-- Soma dos nove primeiros multiplicados por 10, 9, 8 e assim por diante...
+		soma:=(vet_cpf[0]*10)+(vet_cpf[1]*9)+(vet_cpf[2]*8)+(vet_cpf[3]*7)+(vet_cpf[4]*6)+(vet_cpf[5]*5)+(vet_cpf[6]*4)+(vet_cpf[7]*3)+(vet_cpf[8]*2);
+		rest:=soma % 11;
+		if (rest = 0) or (rest = 1) THEN
+			vet_cpf[9]:=0;
+		ELSE 
+			vet_cpf[9]:=(11-rest); 
+		END IF;
+			-- CÁLCULO DO SEGUNDO NÚMERO DO DV
+			-- Soma dos nove primeiros multiplicados por 11, 10, 9 e assim por diante...
+			soma:= (vet_cpf[0]*11) + (vet_cpf[1]*10) + (vet_cpf[2]*9) + (vet_cpf[3]*8) + (vet_cpf[4]*7) + (vet_cpf[5]*6) + (vet_cpf[6]*5) + (vet_cpf[7]*4) + (vet_cpf[8]*3) + (vet_cpf[9]*2);
+			rest:=soma % 11;
+		if (rest = 0) or (rest = 1) THEN
+			vet_cpf[10] := 0;
+		ELSE
+			vet_cpf[10] := (11-rest);
+		END IF;
+		--Retorno do CPF
+		RETURN trim(trim(to_char(vet_cpf[0],'9')) || trim(to_char(vet_cpf[1],'9')) || trim(to_char(vet_cpf[2],'9')) || trim(to_char(vet_cpf[3],'9')) || trim(to_char(vet_cpf[4],'9')) || trim(to_char(vet_cpf[5],'9')) || trim(to_char(vet_cpf[6],'9')) || trim(to_char(vet_cpf[7],'9'))|| trim(to_char(vet_cpf[8],'9')) || trim(to_char(vet_cpf[9],'9')) || trim(to_char(vet_cpf[10],'9')));
+	END;
+$$ LANGUAGE PLPGSQL;
+
+-----------------------------------------------------------
+-- popular tabela de endereços
+do $$
+	DECLARE
+		cep_random varchar;
+		num_random smallint;
+		bairro_random varchar;
+		rua_random varchar;
+		aux integer;
+	begin
+		for i in 1..10000 loop
+			cep_random := CEP_RANDOM ();
+			num_random := numero(4);
+			bairro_random := bairro FROM municipios ORDER BY random() LIMIT 1;
+			rua_random := logradouro FROM municipios ORDER BY random() LIMIT 1;
+			aux := count(cep) from endereco 
+			where (cep_random)=upper(cep) and num_random=num and upper(bairro_random)=upper(bairro);
+			
+			if(aux = 0 and rua_random is not null ) then
+				INSERT INTO endereco (RUA,NUM,BAIRRO,CEP) 
+				VALUES(rua_random,num_random,bairro_random,cep_random);
+			end if;
+		end loop;
+	end;
+$$ language plpgsql;
+
+-----------------------------------------------------------
+-- populando tabela pessoa
+do $$
+	declare
+		cpf_g varchar;
+		rg_g  integer;
+		nome varchar;
+		sexo char(1);
+		sobrenome varchar;
+		nome_p varchar;
+		nome_m varchar;
+		aux_c integer;
+		aux_r integer;
+		numero_aux smallint;
+		rua_aux	varchar;
+		cep_aux varchar;
+	begin
+  		for i in 1..100000 loop
+			cpf_g := gerar_CPF();
+			rg_g := numero(8);
+			-- se o cpf ou rg gerado ja existe pula o loop
+			aux_c := count(P.cpf) from pessoa as P where upper(P.cpf) = cpf_g;
+			aux_r := count(P.rg) from pessoa as P where P.rg=rg_g;
+			if (aux_c <> 0 or aux_r <> 0) then
+				continue;
+			end if;
+			-- gera um boolenao aleatorio, se true pessoa sera do genero feminino, caso contrario masculino
+			if (cast(cast(random() as integer) as boolean) = true) then
+				nome := N.nome_f FROM nomes as N ORDER BY random() LIMIT 1;
+				sexo := 'F';
+			else
+				nome := N.nome_m FROM nomes as N ORDER BY random() LIMIT 1;
+				sexo := 'M';
+			end if;
+				sobrenome := N.sobrenome FROM nomes as N ORDER BY random() LIMIT 1 ;
+				nome := nome || ' ' || sobrenome;
+				nome_m := N.nome_f FROM nomes as N ORDER BY random() LIMIT 1;
+				nome_p := N.nome_m FROM nomes as N ORDER BY random() LIMIT 1;
+				nome_m := nome_m || ' ' || sobrenome;
+				nome_p := nome_p || ' ' || sobrenome;
+				
+				cep_aux := E.cep FROM endereco as E ORDER BY random() LIMIT 1;
+				rua_aux := E.rua  from endereco as E
+				where upper(E.cep)=upper(cep_aux) order by random() limit 1;
+				numero_aux := E.num from endereco as E 
+				where upper(E.cep)=upper(cep_aux) and upper(E.rua)=upper(rua_aux) order by random() limit 1;
+				
+				INSERT INTO pessoa (cpf,rg,data_nasc,sexo,nome,nome_pai,nome_mae,fone1,num,rua,cep)
+				values (cpf_g,rg_g,data(),sexo,nome,nome_p,nome_m,numero(9),numero_aux,rua_aux,cep_aux);
+		end loop;
+ 	end;
+$$ language plpgsql;
+
+
+-----------------------------------------------------------
+-- populando unidade de saude
+do $$
+	declare
+		cnpj_aux varchar;
+		aux integer;
+		numero_aux smallint;
+		rua_aux varchar;
+		cep_aux varchar;
+	begin
+		for i in 1..100000 loop
+			cnpj_aux :=gerar_CPF();
+			aux := count(U.cnpj) from unidade_saude as U where upper(U.cnpj) = cnpj_aux;
+			if(aux <> 0) then
+				continue;
+			end if;
+			cep_aux :=E.cep from endereco as E order by random() limit 1;
+			rua_aux :=E.rua from endereco as E where upper(E.cep)=upper(cep_aux) order by random() limit 1;
+			numero_aux := E.num from endereco as E
+			where upper(E.cep)=upper(cep_aux) and upper(E.rua)=upper(rua_aux) order by random() limit 1;
+			insert into unidade_saude (cnpj,horario_atendimento,num,rua,cep,fone1,fone2) 
+			values (cnpj_aux,'Seg a sex das 8:00 as 18:00',numero_aux,rua_aux,cep_aux,numero(8),numero(8));
+		end loop;
+	end;
+$$ language plpgsql
+
+
+---------------------------- drop tabelas---------------------------------
+
+DROP TABLE municipios
+drop table nomes
+
+---------------------------------------------------------------------------
+
+drop table vacinou_se
+drop table estoque
+drop table risco
+drop table vacina
+drop table unidade_saude
+drop table funcionario
+drop table pessoa
+drop table endereco
+

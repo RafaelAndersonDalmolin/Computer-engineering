@@ -1,0 +1,167 @@
+DO $$
+DECLARE 
+	NUMEROALU INTEGER;
+	CIDADEALU ALUNO.CIDADE%TYPE :='5VwDuutuuU';
+BEGIN
+	SELECT count(*) INTO NUMEROALU FROM Aluno A WHERE A.CIDADE=CIDADEALU;
+	
+	raise notice 'Alunos de Pato Branco: %', numeroalu;
+	-- retorna uma mensagen com a string e o valor da variavel NUMEROALU
+
+END $$
+language plpgsql;
+
+------------------------------------------------
+
+DO $$
+	DECLARE
+		nomealu varchar;
+		raalu Aluno.RA%TYPE:=1;
+	BEGIN
+		SELECT nome INTO STRICT nomealu FROM Aluno WHERE ra=raalu;
+		--STRICT gera erro se a consulta retornar mais de uma tupla, a
+		--ausencia fara com que a primeira tupla do resultado sera colocada na
+		--variavel, ou senao NULO caso nao retorne nada, e nao gera erro.
+		raise notice 'Aluno: %',nomealu;
+		
+	EXCEPTION
+	 WHEN NO_DATA_FOUND THEN
+		raise notice 'Nao existe este aluno.';
+		WHEN TOO_MANY_ROWS THEN
+		raise notice 'Nesse caso nao acontece...';
+		WHEN OTHERS THEN
+		raise notice 'Erro numero: %. Mensagem:%', SQLSTATE, SQLERRM;
+END$$
+LANGUAGE PLPGSQL;
+
+------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION soma (a integer, b integer) 
+RETURNS INTEGER AS $$
+	BEGIN
+	return a+b;
+END;
+$$ LANGUAGE plpgsql;
+
+
+------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION soma (integer, integer)
+RETURNS INTEGER AS $$
+	DECLARE
+		param1 ALIAS FOR $1;
+		param2 ALIAS FOR $2;
+		-- neste caso nao demos nomes as variaveis de assinatura, entao criamos duas variaveis para utilizar na soma
+	BEGIN
+		return param1 + param2;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-----------------------------------------------------
+
+CREATE FUNCTION soma2 (a integer, b integer, OUT soma integer,OUT prod integer) as $$
+	BEGIN
+		soma := a + b;
+		prod := a * b;
+END;
+$$ LANGUAGE plpgsql;
+
+------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION Vendas (itemID int)
+RETURNS TABLE (quantidade int, total numeric) as $$
+	BEGIN
+		RETURN QUERY SELECT V.quantidade, V.quantidade*V.preco
+		FROM vendas as V
+		WHERE V.itemno = itemID;
+END;
+$$ LANGUAGE plpgsql;
+
+------------------------------------------------------
+
+CREATE TABLE aluno (ra INT, nome varchar, datanasc date);
+INSERT INTO aluno VALUES (1, ’Pedro’, to_date(’12-02-1995’,’DDMM-YYYY’) );
+INSERT INTO aluno VALUES (2, ’Juca’, to_date(’20-03-1989’,’DDMM-YYYY’) );
+
+CREATE OR REPLACE FUNCTION todos_alunos() RETURNS SETOF aluno AS $$
+DECLARE
+	r aluno%rowtype;
+	BEGIN
+		FOR r IN
+			SELECT * FROM aluno WHERE ra > 0
+		LOOP
+			-- pode-se fazer algum processamento aqui
+			RETURN NEXT r; -- retorna tupla atual do SELECT
+		END LOOP;
+	RETURN;
+END$$
+LANGUAGE plpgsql;
+SELECT * FROM todos_alunos();
+
+-------------------------------------------------------------
+
+select nome,idade from get_idades()
+
+
+create function get_idades()
+RETURNS table (nome varchar, idade double precision) AS $$
+	begin
+		return query select A.nome,extract( year from age(A.datanasc) ) from aluno as A;
+end;
+$$ language plpgsql;
+
+-------------------------------------------------------------
+
+IF number = 0 THEN
+	result := ’zero’;
+ELSIF number > 0 THEN
+	result := ’positive’;
+ELSIF number < 0 THEN
+	result := ’negative’;
+ELSE
+	result := ’NULL’;
+END IF;
+
+-----------------------------------------------------------------
+
+CASE
+	WHEN x BETWEEN 0 AND 10 THEN
+		msg := ’valor est´a entre zero e dez’;
+	WHEN x BETWEEN 11 AND 20 THEN
+		msg := ’valor est´a entre onze e vinte’;
+END CASE;
+
+--------------------------------------------------------------------
+LOOP
+-- alguns calculos aqui
+EXIT WHEN count > 100;
+CONTINUE WHEN count < 50;
+-- Daqui para frente apenas executar´a
+-- se valor de count estiver entre [50 .. 100]
+<comandos>
+END LOOP;
+
+-------------------------------------------------------------
+
+WHILE <condicao> LOOP
+<comandos>
+END LOOP
+
+-------------------------------------------------------------
+
+do $$
+DECLARE
+C_Alunos CURSOR FOR SELECT * FROM Aluno;
+V_Aluno record;
+BEGIN
+OPEN C_Alunos; --Abre o cursor e obt´em o Conjunto-resposta
+LOOP
+FETCH C_Alunos INTO V_Aluno; --recupera uma tupla
+--Sai do laco quando nao tem mais tuplas:
+EXIT WHEN V_Aluno IS NULL;
+raise notice ’RA: %, Nome: %’, V_Aluno.ra, V_Aluno.Nome;
+END LOOP;
+CLOSE C_Alunos; --Fecha o cursor
+END; $$
+language plpgsql;

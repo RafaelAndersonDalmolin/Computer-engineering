@@ -1,0 +1,33 @@
+﻿================================================
+--Dado um cpf de uma pessoa, retornar seus historico de vacinas e suas respectivas datas
+
+create function vacinas(cpf_p VARCHAR)
+RETURNS table (NOME VARCHAR,DATA TIMESTAMP) as $$
+	begin
+		return query select V.nome, H.data from  vacinou_se as H , Vacinas as V
+		where H.cpf = cpf_p and V.ID_vac = H.id_vac;
+	end;
+$$ language plpgsql;
+=======================================================================
+--dado nome da vacina e a unidade de saude, retornar a quantidade em estoque
+
+create function quantidade_estoque(nome_vac varchar, cnpj_uni varchar)
+returns table (CNPJ VARCHAR,NOME_VACINA VARCHAR, QUANTIDADE SMALLINT) as $$
+	begin
+		return query Select E.cnpj,V.nome, E.quantidade from estoque as E ,
+		vacina as V where V.nome = nome_vac and E.cnpj = cnpj_uni and V.id_vac = E.id_vac ;
+	end;
+$$ language plpgsql;
+
+================================================
+--dado um CEP, retornar o endereço das unidades de saude pertencentes ao CEP
+
+create function uni_saude(cep_e integer)
+RETURNS table (RUA VARCHAR, NUMERO SMALLINT,BAIRRO VARCHAR, COMPLEMENTO VARCHAR) AS $$
+	begin
+		return query select E.rua,E.num,C.bairro, E.complemento 
+		from endereco as E, unidade_saude as U, cep as C
+		where E.cep = cep_e and C.cep =cep_e and U.rua=E.rua and U.num=E.rua;
+	end;
+$$ language plpgsql;
+======================================================

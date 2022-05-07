@@ -1,0 +1,99 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+do $$
+declare 
+	PK_RA decimal(8);
+	AUX integer;
+		begin
+			for i in 1..10000 loop
+				PK_RA := numero(8);
+				AUX := count(RA) from aluno where RA=PK_RA;
+				if (AUX = 0 and PK_RA >9999999)  then
+					insert into Aluno(Nome,RA,DataNasc,NomeMae,Cidade,Estado,Curso,Periodo)
+					values(texto(10),PK_RA,data(),texto(10),texto(10),texto(2),texto(10),(numero(1)+1));
+				end if;
+			end loop;
+		end
+$$ language plpgsql
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+do $$
+declare 
+	FK decimal(8); 
+   	monitores integer;
+	PRE_REQ varchar;
+	begin
+		for i in 1..1000 loop
+			FK := ra FROM aluno ORDER BY random() LIMIT 1;
+			monitores := count(monitor) from discip D where D.monitor = FK;
+			PRE_REQ:=sigla FROM discip ORDER BY random() LIMIT 1;
+			--select count(monitor) into monitores from discip where fk = monitor;
+			if (monitores = 0)  then
+				insert into Discip(Sigla,Nome,SiglaPreReq,NNCred,Monitor,Depto)
+				values(texto(7),texto(10),PRE_REQ,
+				numero(2),FK,texto(9));
+			end if;
+		end loop;
+end$$ 
+language plpgsql
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+do $$
+declare
+	PK_RA decimal(8);
+	PK_SIGLA varchar;
+	PK_ANO integer;
+	Contador integer;
+	begin
+		PK_RA := ra from aluno order by random() limit 1;
+		PK_SIGLA := sigla from discip order by random() limit 1;
+		PK_ANO := numero(4);
+		contador := count(M.ra) from matricula M where (M.ra = PK_RA and M.sigla = PK_SIGLA and M.ano = PK_ANO and M.semestre =1);
+ 		if (contador =0) then
+			for i in 1..1000 loop
+				insert into matricula (ra,sigla,ano,semestre,codturma) 
+				values (PK_RA,PK_SIGLA,PK_ano,2,numero(2));
+			end loop;
+		end if;
+end$$
+language plpgsql;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE TABLE Aluno(
+	Nome VARCHAR NOT NULL,
+	RA DECIMAL(8) ,
+	DataNasc DATE NOT NULL,
+	Idade integer,
+	NomeMae VARCHAR NOT NULL,
+	Cidade VARCHAR,
+	Estado CHAR(2),
+	Curso VARCHAR,
+	periodo integer
+);
+CREATE TABLE Discip(
+	Sigla CHAR(7) NOT NULL,
+	Nome VARCHAR NOT NULL,
+	SiglaPreReq VARCHAR,
+	NNCred DECIMAL(2) NOT NULL,
+	Monitor DECIMAL(8) UNIQUE,
+	Depto varCHAR
+);
+	
+CREATE TABLE Matricula(
+	RA DECIMAL(8),
+	Sigla VARCHAR,
+	Ano integer,
+	Semestre integer ,
+	CodTurma integer NOT NULL,
+	NotaP1 NUMERIC(3,1), 
+	NotaP2 NUMERIC(3,1),
+	NotaTrab NUMERIC(3,1),
+	NotaFIM NUMERIC(3,1),
+	Frequencia decimal(3)
+);
+
+ALTER TABLE Aluno ADD CONSTRAINT PK_RA PRIMARY KEY (RA);
+ALTER TABLE Discip ADD CONSTRAINT PK_Sigla PRIMARY KEY (Sigla);
+ALTER TABLE Matricula ADD CONSTRAINT PK_RA_Sig_Ano_Sem PRIMARY KEY (RA,Sigla,ano,semestre);
+ALTER TABLE Discip ADD CONSTRAINT FK_Sigla_Pre_Req FOREIGN KEY (SiglaPreReq) REFERENCES Discip(Sigla)  ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE Discip ADD CONSTRAINT FK_Monitor FOREIGN KEY (Monitor) references aluno(RA)  ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE Matricula ADD CONSTRAINT FK_RA FOREIGN KEY (RA) REFERENCES Aluno(RA) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Matricula ADD CONSTRAINT FK_Sigla FOREIGN KEY (Sigla) references Discip(Sigla) ON DELETE CASCADE ON UPDATE CASCADE;
