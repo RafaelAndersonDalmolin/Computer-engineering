@@ -1,0 +1,8 @@
+7
+insert 13 0
+insert 60 0
+pop_back
+erase 0
+insert 92 0
+insert 51 0
+insert 23 0

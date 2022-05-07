@@ -1,0 +1,9 @@
+8
+insert 10 0
+push_back 90
+push_front 56
+insert 42 1
+erase 0
+insert 88 2
+set 1 73
+push_back 49
